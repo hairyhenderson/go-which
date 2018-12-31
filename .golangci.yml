@@ -1,0 +1,38 @@
+linters-settings:
+  govet:
+    check-shadowing: true
+  golint:
+    min-confidence: 0
+  gocyclo:
+    min-complexity: 10
+  maligned:
+    suggest-new: true
+  dupl:
+    threshold: 100
+  goconst:
+    min-len: 2
+    min-occurrences: 4
+  depguard:
+    list-type: whitelist
+    include-go-root: false
+    packages:
+      - github.com/hairyhenderson/go-which
+      - github.com/hairyhenderson/go-which/internal/version
+      - github.com/spf13/afero
+    # inTests:
+      - github.com/stretchr/testify
+      - gotest.tools/
+      - gopkg.in/check.v1
+  misspell:
+    locale: en-CA
+  lll:
+    line-length: 140
+
+linters:
+  enable-all: true
+  disable:
+    - interfacer
+
+run:
+  skip-dirs:
+    - vendor/

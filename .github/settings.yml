@@ -1,0 +1,138 @@
+repository:
+  # See https://developer.github.com/v3/repos/#edit for all available settings.
+
+  # The name of the repository. Changing this will rename the repository
+  name: go-which
+
+  # A short description of the repository that will show up on GitHub
+  description: A cross-platform Go implementation of the `which(1)` command, usable both as a CLI and library.
+
+  # A URL with more information about the repository
+  # homepage: https://example.github.io/
+
+  # A comma-separated list of topics to set on the repository
+  topics: go, golang, shell, go-package, library, golang-library, cli, golang-cli, cross-platform,
+
+  # Either `true` to make the repository private, or `false` to make it public.
+  private: false
+
+  # Either `true` to enable issues for this repository, `false` to disable them.
+  has_issues: true
+
+  # Either `true` to enable the wiki for this repository, `false` to disable it.
+  has_wiki: false
+
+  # Either `true` to enable downloads for this repository, `false` to disable them.
+  has_downloads: true
+
+  # Updates the default branch for this repository.
+  default_branch: master
+
+  # Either `true` to allow squash-merging pull requests, or `false` to prevent
+  # squash-merging.
+  allow_squash_merge: true
+
+  # Either `true` to allow merging pull requests with a merge commit, or `false`
+  # to prevent merging pull requests with merge commits.
+  allow_merge_commit: true
+
+  # Either `true` to allow rebase-merging pull requests, or `false` to prevent
+  # rebase-merging.
+  allow_rebase_merge: true
+
+# Labels: define labels for Issues and Pull Requests
+labels:
+  - name: admin
+    color: bfdadc
+    description: An administrative change to the project
+  - name: bug
+    color: d73a4a
+    description: Something isn't working
+  - name: duplicate
+    color: cfd3d7
+    description: This issue or pull request already exists
+  - name: enhancement
+    color: a2eeef
+    description: New feature or request
+  - name: good first issue
+    color: 7057ff
+    description: Good for newcomers
+  - name: help wanted
+    color: 008672
+    description: Extra attention is needed
+  - name: invalid
+    color: e4e669
+    description: This doesn't seem right
+  - name: question
+    color: d876e3
+    description: Further information is requested
+  - name: wontfix
+    color: ffffff
+    description: This will not be worked on
+  - name: api/major
+    color: d93f0b
+    description: This has breaking API changes or deletions, and requires a major version increase
+  - name: api/minor
+    color: fbca04
+    description: This has non-breaking API additions, and requires a minor version increase
+  - name: cleanup
+    color: d4c5f9
+    description: Doesn't change functionality, simple refactoring aimed at making the project cleaner
+  - name: dependencies
+    color: fef2c0
+    description: An update to the project dependencies
+  - name: documentation
+    color: fbca04
+    description: Changes or adds documentation
+  - name: security
+    color: ff00eb
+    description: A security-related issue or fix
+  - name: stale
+    color: cccccc
+    description: An open issue with no recent activity
+
+# Collaborators: give specific users access to this repository.
+# collaborators:
+#   # - username: hairyhenderson
+#   #   # Note: Only valid on organization-owned repositories.
+#   #   # The permission to grant the collaborator. Can be one of:
+#   #   # * `pull` - can pull, but not push to or administer this repository.
+#   #   # * `push` - can pull and push, but not administer this repository.
+#   #   # * `admin` - can pull, push and administer this repository.
+#   #   permission: push
+#   # - username: hubot
+#   #   permission: pull
+#   # - username:
+#   #   permission: pull
+
+branches:
+  - name: master
+    # https://developer.github.com/v3/repos/branches/#update-branch-protection
+    # Branch Protection settings. Set to null to disable
+    protection:
+      # Required. Require at least one approving review on a pull request, before merging. Set to null to disable.
+      required_pull_request_reviews: null
+      # # The number of approvals required. (1-6)
+      # required_approving_review_count: 1
+      # # Dismiss approved reviews automatically when a new commit is pushed.
+      # dismiss_stale_reviews: true
+      # # Blocks merge until code owners have reviewed.
+      # require_code_owner_reviews: true
+      # # Specify which users and teams can dismiss pull request reviews. Pass an empty dismissal_restrictions object to disable. User and team dismissal_restrictions are only available for organization-owned repositories. Omit this parameter for personal repositories.
+      # # dismissal_restrictions:
+      # #   users: []
+      # #   teams: []
+      # Required. Require status checks to pass before merging. Set to null to disable
+      required_status_checks:
+        # Required. Require branches to be up to date before merging.
+        strict: true
+        # Required. The list of status checks to require in order to merge into this branch
+        contexts:
+          - build-and-test
+          - WIP
+      # Required. Enforce all configured restrictions for administrators. Set to true to enforce required status checks for repository administrators. Set to null to disable.
+      enforce_admins: false
+      # Required. Restrict who can push to this branch. Team and user restrictions are only available for organization-owned repositories. Set to null to disable.
+      # restrictions:
+      #   users: []
+      #   teams: []
