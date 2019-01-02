@@ -112,7 +112,7 @@ test:
 
 integration: ./bin/$(PKG)
 	$(GO) test -v -tags=integration \
-		./tests/integration -check.v
+		./internal/tests/integration -check.v
 
 integration.iid: Dockerfile.integration $(PREFIX)/bin/$(PKG_NAME)_linux-amd64$(call extension,$(GOOS))
 	docker build -f $< --iidfile $@ .

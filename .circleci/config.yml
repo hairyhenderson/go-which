@@ -63,9 +63,9 @@ jobs:
       - run:
           name: make integration
           command: |
-            trap "go-junit-report < /tmp/test-results/go-test.out > /tmp/test-results/report.xml" EXIT
-            make test | tee /tmp/test-results/go-test.out
-            echo $? > test.exit
+            trap "go-junit-report < /tmp/test-results/go-integration.out > /tmp/test-results/integration-report.xml" EXIT
+            make integration | tee /tmp/test-results/go-integration.out
+            echo $? > integration.exit
       - store_test_results:
           path: /tmp/test-results
       - store_artifacts:

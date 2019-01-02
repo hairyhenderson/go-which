@@ -1,3 +1,8 @@
+// Package which - locates executable files in the current path. A cross-platform
+// implementation of the `which(1)` command.
+//
+// This allows finding programs by searching the current `PATH` environment
+// variable without needing to shell out to the operating system's `which` command.
 package which
 
 import (
