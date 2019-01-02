@@ -1,0 +1,23 @@
+#!/bin/bash
+set -exuo pipefail
+
+make -v
+docker version
+
+echo "======== Build hook running"
+export DOCKER_REPO=${DOCKER_REPO:-hairyhenderson/go-which}
+export DOCKER_TAG=${DOCKER_TAG:-latest}
+
+if [ "$DOCKER_TAG" == "latest" ]; then
+  export SLIM_TAG="slim"
+else
+  export SLIM_TAG="${DOCKER_TAG}-slim"
+fi
+
+if [ "$DOCKER_TAG" == "latest" ]; then
+  export ALPINE_TAG="alpine"
+else
+  export ALPINE_TAG="${DOCKER_TAG}-alpine"
+fi
+
+make artifacts.tag "${DOCKER_TAG}.tag" "${SLIM_TAG}.tag" "${ALPINE_TAG}.tag"

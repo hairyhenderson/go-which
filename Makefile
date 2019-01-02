@@ -5,9 +5,10 @@ PKG_NAME ?= $(subst go-,,$(shell basename `pwd`))
 PREFIX := .
 GO111MODULE := on
 GOFLAGS := -mod=vendor
+CGO_ENABLED := 0
 DOCKER_BUILDKIT ?= 1
 
-DOCKER_REPO ?= hairyhenderson/$(PKG_NAME)
+DOCKER_REPO ?= hairyhenderson/go-which
 DOCKER_TAG ?= latest
 
 ifeq ("$(CI)","true")
@@ -29,8 +30,9 @@ platforms := linux-amd64 linux-arm linux-arm64 darwin-amd64 windows-amd64.exe
 compressed-platforms := linux-amd64-slim linux-arm-slim linux-arm64-slim darwin-amd64-slim windows-amd64-slim.exe
 
 clean:
-	rm -Rf $(PREFIX)/bin/*
-	rm -f $(PREFIX)/*.[ci]id
+	-rm -Rf $(PREFIX)/bin/*
+	-rm -f $(PREFIX)/*.tag
+	-rm -f $(PREFIX)/*.[ci]id
 
 build-x: $(patsubst %,$(PREFIX)/bin/$(PKG_NAME)_%,$(platforms))
 
@@ -106,7 +108,7 @@ build: $(PREFIX)/bin/$(PKG_NAME)$(call extension,$(GOOS))
 test:
 	$(GO) test -v -race -coverprofile=c.out ./...
 
-integration: $(PREFIX)/bin/$(PKG_NAME)
+integration: $(PREFIX)/bin/$(PKG_NAME)$(call extension,$(GOOS))
 	$(GO) test -v -tags=integration \
 		./internal/tests/integration -check.v
 

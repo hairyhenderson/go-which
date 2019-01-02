@@ -1,3 +1,4 @@
+image: Visual Studio 2017
 version: "{build}"
 
 clone_folder: c:\gopath\src\github.com\hairyhenderson\go-which
@@ -9,12 +10,16 @@ init:
   - git config --global core.autocrlf input
 
 install:
+  # - set 
+  # - set PATH=%GOPATH%\bin;c:\go\bin;C:\msys64\usr\local\bin;C:\msys64\usr\bin;C:\msys64\bin;%PATH%
   - set PATH=%GOPATH%\bin;c:\go\bin;%PATH%
   - go version
 
-build: false
-deploy: false
+build_script:
+  - make build
 
 test_script:
-  - go build github.com/hairyhenderson/go-which
-  - go test -v ./... & IF ERRORLEVEL == 1 EXIT 1
+  - make test & IF ERRORLEVEL == 1 EXIT 1
+  # - make integration & IF ERRORLEVEL == 1 EXIT 1
+
+deploy: false
