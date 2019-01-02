@@ -1,0 +1,96 @@
+version: 2.1
+
+executors:
+  build-executor:
+    docker:
+      - image: hairyhenderson/gomplate-ci-build:latest
+    working_directory: /go/src/github.com/hairyhenderson/go-which
+
+jobs:
+  test-vendoring:
+    executor: build-executor
+    environment:
+      - GO111MODULE=on
+      - GOFLAGS=-mod=vendor
+    steps:
+      - checkout
+      - run: go mod tidy
+      - run: go mod vendor
+      - run: go mod verify
+      - run:
+          name: ensure clean git repo
+          command: |
+            git status -sb
+            git diff
+            test -z "$(git status --porcelain=v2)"
+  build:
+    executor: build-executor
+    steps:
+      - checkout
+      - run: make build
+      - persist_to_workspace:
+          root: /go
+          paths:
+            - .
+  lint:
+    executor: build-executor
+    steps:
+      - checkout
+      - run: make lint
+  test:
+    executor: build-executor
+    steps:
+      - attach_workspace:
+          at: /go
+      - run: cc-test-reporter before-build
+      - run:
+          name: make test
+          command: |
+            trap "go-junit-report < /tmp/test-results/go-test.out > /tmp/test-results/report.xml" EXIT
+            make test | tee /tmp/test-results/go-test.out
+            echo $? > test.exit
+      - store_test_results:
+          path: /tmp/test-results
+      - run: cc-test-reporter after-build --exit-code $(< test.exit)
+      - store_artifacts:
+          path: bin
+          destination: binaries
+  integration:
+    executor: build-executor
+    steps:
+      - attach_workspace:
+          at: /go
+      - run:
+          name: make integration
+          command: |
+            trap "go-junit-report < /tmp/test-results/go-test.out > /tmp/test-results/report.xml" EXIT
+            make test | tee /tmp/test-results/go-test.out
+            echo $? > test.exit
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: bin
+          destination: binaries
+  docker-images:
+    executor: build-executor
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 18.06.0-ce
+          docker_layer_caching: true
+      - run: make artifacts.tag latest.tag alpine.tag slim.tag
+
+workflows:
+  version: 2.1
+  build-and-test:
+    jobs:
+      - test-vendoring
+      - build
+      - test:
+          requires:
+            - build
+      - integration:
+          requires:
+            - build
+      - lint
+      - docker-images
