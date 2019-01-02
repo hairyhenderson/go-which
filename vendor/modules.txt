@@ -23,7 +23,7 @@ golang.org/x/text/transform
 golang.org/x/text/unicode/norm
 # gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127
 gopkg.in/check.v1
-# gotest.tools v2.2.0+incompatible
+# gotest.tools v0.0.0-20181223230014-1083505acf35
 gotest.tools/assert
 gotest.tools/assert/cmp
 gotest.tools/icmd
