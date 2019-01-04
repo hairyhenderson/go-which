@@ -2,6 +2,7 @@
 
 [![Build Status][circleci-image]][circleci-url]
 [![hairyhenderson/go-which on DockerHub][dockerhub-image]][dockerhub-url]
+[![GoDoc][godoc-image]][godocs]
 
 A cross-platform Go implementation of the `which(1)` command, usable both as a CLI and library.
 
@@ -81,8 +82,8 @@ Copyright (c) 2018-2019 Dave Henderson
 
 [godocs]: https://godoc.org/github.com/hairyhenderson/go-which
 
-
 [circleci-image]: https://circleci.com/gh/hairyhenderson/go-which/tree/master.svg?style=shield
 [circleci-url]: https://circleci.com/gh/hairyhenderson/go-which/tree/master
 [dockerhub-image]: https://img.shields.io/badge/docker-ready-blue.svg
 [dockerhub-url]: https://hub.docker.com/r/hairyhenderson/go-which
+[godoc-image]: https://godoc.org/github.com/hairyhenderson/go-which?status.svg
