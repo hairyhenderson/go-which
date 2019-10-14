@@ -18,19 +18,15 @@ endif
 
 COMMIT ?= `git rev-parse --short HEAD 2>/dev/null`
 VERSION ?= `git describe --abbrev=0 --tags $(git rev-list --tags --max-count=1) 2>/dev/null | sed 's/v\(.*\)/\1/'`
-# BUILD_DATE ?= `date -u +"%Y-%m-%dT%H:%M:%SZ"`
 
 COMMIT_FLAG := -X `go list ./internal/version`.GitCommit=$(COMMIT)
 VERSION_FLAG := -X `go list ./internal/version`.Version=$(VERSION)
-# BUILD_DATE_FLAG := -X `go list ./internal/version`.BuildDate=$(BUILD_DATE)
 
 GOOS ?= $(shell go version | sed 's/^.*\ \([a-z0-9]*\)\/\([a-z0-9]*\)/\1/')
 GOARCH ?= $(shell go version | sed 's/^.*\ \([a-z0-9]*\)\/\([a-z0-9]*\)/\2/')
 
 platforms := linux-amd64 linux-arm linux-arm64 darwin-amd64 windows-amd64.exe
 compressed-platforms := linux-amd64-slim linux-arm-slim linux-arm64-slim darwin-amd64-slim windows-amd64-slim.exe
-# platforms := linux-amd64
-# compressed-platforms := linux-amd64-slim
 
 clean:
 	rm -Rf $(PREFIX)/bin/*
@@ -110,7 +106,7 @@ build: $(PREFIX)/bin/$(PKG_NAME)$(call extension,$(GOOS))
 test:
 	$(GO) test -v -race -coverprofile=c.out ./...
 
-integration: ./bin/$(PKG)
+integration: $(PREFIX)/bin/$(PKG_NAME)
 	$(GO) test -v -tags=integration \
 		./internal/tests/integration -check.v
 
