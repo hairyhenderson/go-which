@@ -1,9 +1,14 @@
-FROM golang:1.11.5-alpine@sha256:4b8a4130c0d96bc9d75ed0e9d606b16a122a589cdc1d10491fbae8a12828b136 AS build
+FROM alpine:3.8 AS upx
+RUN apk add --no-cache upx=3.94-r0
+
+FROM golang:1.13.1-alpine AS build
 
 RUN apk add --no-cache \
     make \
-    git \
-    upx=3.94-r0
+    libgcc libstdc++ ucl \
+    git
+
+COPY --from=upx /usr/bin/upx /usr/bin/upx
 
 RUN mkdir -p /go/src/github.com/hairyhenderson/go-which
 WORKDIR /go/src/github.com/hairyhenderson/go-which
@@ -13,20 +18,22 @@ ARG VCS_REF
 ARG VERSION
 ARG CODEOWNERS
 
-RUN make build-x compress-all
+RUN make build-x
+
+FROM build AS compress
+
+RUN make compress-all
 
 FROM scratch AS artifacts
 
-COPY --from=build /go/src/github.com/hairyhenderson/go-which/bin/* /bin/
-
-CMD [ "/bin/which_linux-amd64" ]
+COPY --from=compress /go/src/github.com/hairyhenderson/go-which/bin/* /bin/
 
 FROM scratch AS latest
 
 ARG OS=linux
 ARG ARCH=amd64
 
-COPY --from=artifacts /bin/which_${OS}-${ARCH} /which
+COPY --from=build /go/src/github.com/hairyhenderson/go-which/bin/which_${OS}-${ARCH} /which
 
 ARG VCS_REF
 ARG VERSION
@@ -45,7 +52,7 @@ FROM alpine:3.10@sha256:6a92cd1fcdc8d8cdec60f33dda4db2cb1fcdcacf3410a8e05b3741f4
 ARG OS=linux
 ARG ARCH=amd64
 
-COPY --from=artifacts /bin/which_${OS}-${ARCH}-slim /bin/which
+COPY --from=compress /go/src/github.com/hairyhenderson/go-which/bin/which_${OS}-${ARCH}-slim /bin/which
 
 ARG VCS_REF
 ARG VERSION
@@ -64,7 +71,7 @@ FROM scratch AS slim
 ARG OS=linux
 ARG ARCH=amd64
 
-COPY --from=artifacts /bin/which_${OS}-${ARCH}-slim /which
+COPY --from=compress /go/src/github.com/hairyhenderson/go-which/bin/which_${OS}-${ARCH}-slim /bin/which
 
 ARG VCS_REF
 ARG VERSION
