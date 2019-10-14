@@ -9,9 +9,9 @@ import (
 
 	. "gopkg.in/check.v1"
 
-	"gotest.tools/assert"
-	"gotest.tools/assert/cmp"
-	"gotest.tools/icmd"
+	"gotest.tools/v3/assert"
+	"gotest.tools/v3/assert/cmp"
+	"gotest.tools/v3/icmd"
 )
 
 type BasicSuite struct {

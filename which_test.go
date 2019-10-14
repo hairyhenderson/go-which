@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/spf13/afero"
-	"github.com/stretchr/testify/assert"
+	"gotest.tools/v3/assert"
 )
 
 func initFS(t *testing.T) afero.Fs {
@@ -22,7 +22,7 @@ func initFS(t *testing.T) afero.Fs {
 		"/opt/bin"}
 	for _, d := range dirs {
 		err := fs.MkdirAll(d, 0755)
-		assert.NoError(t, err)
+		assert.NilError(t, err)
 	}
 
 	// create some executables
@@ -32,7 +32,7 @@ func initFS(t *testing.T) afero.Fs {
 	for _, n := range files {
 		f, _ := fs.OpenFile(n, os.O_CREATE, 0755)
 		_, err := f.WriteString(contents)
-		assert.NoError(t, err)
+		assert.NilError(t, err)
 	}
 
 	// create some non-executable files
@@ -40,7 +40,7 @@ func initFS(t *testing.T) afero.Fs {
 	for _, n := range files {
 		f, _ := fs.OpenFile(n, os.O_CREATE, 0644)
 		_, err := f.WriteString(contents)
-		assert.NoError(t, err)
+		assert.NilError(t, err)
 	}
 
 	return fs
@@ -64,14 +64,14 @@ func TestAll(t *testing.T) {
 	fs := initFS(t)
 
 	os.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin:/opt")
-	assert.EqualValues(t, []string{}, all(fs))
-	assert.EqualValues(t, []string{}, all(fs, ""))
-	assert.EqualValues(t, []string{}, all(fs, "baz"))
-	assert.EqualValues(t, []string{"/usr/bin/foo", "/bin/foo"}, all(fs, "foo"))
-	assert.EqualValues(t, []string{"/usr/local/bin/bar", "/bin/bar"}, all(fs, "bar"))
-	assert.EqualValues(t, []string{}, all(fs, "bin"))
+	assert.DeepEqual(t, []string{}, all(fs))
+	assert.DeepEqual(t, []string{}, all(fs, ""))
+	assert.DeepEqual(t, []string{}, all(fs, "baz"))
+	assert.DeepEqual(t, []string{"/usr/bin/foo", "/bin/foo"}, all(fs, "foo"))
+	assert.DeepEqual(t, []string{"/usr/local/bin/bar", "/bin/bar"}, all(fs, "bar"))
+	assert.DeepEqual(t, []string{}, all(fs, "bin"))
 
-	assert.EqualValues(t, []string{
+	assert.DeepEqual(t, []string{
 		"/usr/bin/foo", "/bin/foo",
 		"/usr/local/bin/bar", "/bin/bar"},
 		all(fs, "foo", "bar", "baz"))
@@ -81,15 +81,15 @@ func TestFound(t *testing.T) {
 	fs := initFS(t)
 
 	os.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin:/opt")
-	assert.False(t, found(fs))
-	assert.False(t, found(fs, ""))
-	assert.False(t, found(fs, "baz"))
-	assert.True(t, found(fs, "foo"))
-	assert.True(t, found(fs, "bar"))
-	assert.False(t, found(fs, "bin"))
+	assert.Assert(t, !found(fs))
+	assert.Assert(t, !found(fs, ""))
+	assert.Assert(t, !found(fs, "baz"))
+	assert.Assert(t, found(fs, "foo"))
+	assert.Assert(t, found(fs, "bar"))
+	assert.Assert(t, !found(fs, "bin"))
 
-	assert.False(t, found(fs, "foo", "bar", "baz"))
-	assert.True(t, found(fs, "foo", "bar", "qux"))
+	assert.Assert(t, !found(fs, "foo", "bar", "baz"))
+	assert.Assert(t, found(fs, "foo", "bar", "qux"))
 }
 
 // nolint: gochecknoinits
