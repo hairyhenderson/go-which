@@ -10,8 +10,8 @@ jobs:
   test-vendoring:
     executor: build-executor
     environment:
-      - GO111MODULE=on
-      - GOFLAGS=-mod=vendor
+      GO111MODULE: 'on'
+      GOFLAGS: -mod=vendor
     steps:
       - checkout
       - run: go mod tidy
@@ -76,15 +76,13 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 18.06.0-ce
-          docker_layer_caching: true
+          version: 18.09.3
       - run: make artifacts.tag latest.tag alpine.tag slim.tag
 
 workflows:
-  version: 2.1
   build-and-test:
     jobs:
-      - test-vendoring
+      # - test-vendoring
       - build
       - test:
           requires:

@@ -37,24 +37,31 @@ func main() {
 
 	if all {
 		found := which.All(programs...)
+
 		if len(found) == 0 {
 			os.Exit(1)
 		}
+
 		fmt.Println(strings.Join(found, "\n"))
+
 		return
 	}
 
 	if silent {
 		found := which.Found(programs...)
+
 		if found {
 			return
 		}
+
 		os.Exit(1)
 	}
 
 	found := which.Which(programs...)
+
 	if found == "" {
 		os.Exit(1)
 	}
+
 	fmt.Println(found)
 }

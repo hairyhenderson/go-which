@@ -32,6 +32,7 @@ func which(fs afero.Fs, program ...string) string {
 			}
 		}
 	}
+
 	return ""
 }
 
@@ -43,6 +44,7 @@ func All(program ...string) []string {
 
 func all(fs afero.Fs, program ...string) []string {
 	out := []string{}
+
 	for _, prog := range program {
 		for _, p := range getPath() {
 			candidate := filepath.Join(p, prog)
@@ -51,6 +53,7 @@ func all(fs afero.Fs, program ...string) []string {
 			}
 		}
 	}
+
 	return out
 }
 
@@ -64,16 +67,19 @@ func found(fs afero.Fs, program ...string) bool {
 	count := 0
 	for _, prog := range program {
 		count = 0
+
 		for _, p := range getPath() {
 			candidate := filepath.Join(p, prog)
 			if isExec(fs, candidate) {
 				count++
 			}
 		}
+
 		if count == 0 {
 			return false
 		}
 	}
+
 	return count > 0
 }
 
@@ -87,15 +93,18 @@ func getPath() []string {
 			}
 		}
 	}
+
 	return strings.Split(pathVar, string(os.PathListSeparator))
 }
 
 func keys(env []string) []string {
 	out := make([]string, len(env))
+
 	for i, v := range env {
 		parts := strings.SplitN(v, "=", 2)
 		out[i] = parts[0]
 	}
+
 	return out
 }
 
@@ -103,13 +112,13 @@ func keys(env []string) []string {
 // the execute bit set (if on UNIX)
 func isExec(fs afero.Fs, path string) bool {
 	fi, err := fs.Stat(path)
-	if os.IsNotExist(err) {
+
+	switch {
+	case os.IsNotExist(err):
 		return false
-	}
-	if fi.IsDir() {
+	case fi.IsDir():
 		return false
-	}
-	if fi.Mode()&0111 != 0 {
+	case fi.Mode()&0111 != 0:
 		return true
 	}
 	// Windows filesystems have no execute bit...

@@ -106,6 +106,7 @@ func init() {
 				if err != nil {
 					panic(err)
 				}
+
 				_, err = f.WriteString("#!/bin/sh\necho hello world\n")
 				if err != nil {
 					panic(err)
