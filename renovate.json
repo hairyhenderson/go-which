@@ -4,16 +4,8 @@
   "prCreation": "immediate",
   "branchPrefix": "renovate/",
   "updateNotScheduled": true,
-  "minor": {
-    "automerge": false
-  },
-  "patch": {
-    "automerge": false
-  },
-  "pin": {
-    "automerge": false
-  },
-  "lockFileMaintenance": {
+  "automerge": true,
+  "major": {
     "automerge": false
   },
   "docker": {
