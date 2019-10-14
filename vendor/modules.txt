@@ -1,32 +1,27 @@
-# github.com/davecgh/go-spew v1.1.1
-github.com/davecgh/go-spew/spew
-# github.com/google/go-cmp v0.2.0
+# github.com/google/go-cmp v0.3.0
 github.com/google/go-cmp/cmp
 github.com/google/go-cmp/cmp/internal/diff
+github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
 # github.com/kr/pretty v0.1.0
 github.com/kr/pretty
 # github.com/kr/text v0.1.0
 github.com/kr/text
-# github.com/pkg/errors v0.8.0
+# github.com/pkg/errors v0.8.1
 github.com/pkg/errors
-# github.com/pmezard/go-difflib v1.0.0
-github.com/pmezard/go-difflib/difflib
 # github.com/spf13/afero v1.2.0
 github.com/spf13/afero
 github.com/spf13/afero/mem
-# github.com/stretchr/testify v1.2.2
-github.com/stretchr/testify/assert
 # golang.org/x/text v0.3.0
 golang.org/x/text/transform
 golang.org/x/text/unicode/norm
 # gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127
 gopkg.in/check.v1
-# gotest.tools v0.0.0-20181223230014-1083505acf35
-gotest.tools/assert
-gotest.tools/assert/cmp
-gotest.tools/icmd
-gotest.tools/internal/format
-gotest.tools/internal/source
-gotest.tools/internal/difflib
+# gotest.tools/v3 v3.0.0
+gotest.tools/v3/assert
+gotest.tools/v3/assert/cmp
+gotest.tools/v3/icmd
+gotest.tools/v3/internal/difflib
+gotest.tools/v3/internal/format
+gotest.tools/v3/internal/source
