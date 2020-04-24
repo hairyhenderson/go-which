@@ -78,7 +78,7 @@ See the [godocs][] for more information.
 
 [The MIT License](http://opensource.org/licenses/MIT)
 
-Copyright (c) 2018-2019 Dave Henderson
+Copyright (c) 2018-2020 Dave Henderson
 
 [godocs]: https://pkg.go.dev/github.com/hairyhenderson/go-which
 
