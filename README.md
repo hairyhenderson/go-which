@@ -80,7 +80,7 @@ See the [godocs][] for more information.
 
 Copyright (c) 2018-2019 Dave Henderson
 
-[godocs]: https://godoc.org/github.com/hairyhenderson/go-which
+[godocs]: https://pkg.go.dev/github.com/hairyhenderson/go-which
 
 [circleci-image]: https://circleci.com/gh/hairyhenderson/go-which/tree/master.svg?style=shield
 [circleci-url]: https://circleci.com/gh/hairyhenderson/go-which/tree/master
