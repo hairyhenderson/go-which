@@ -13,6 +13,8 @@ import (
 	"github.com/hairyhenderson/go-which/internal/version"
 )
 
+const errorExit = 1
+
 func main() {
 	var (
 		all    bool
@@ -32,14 +34,14 @@ func main() {
 	programs := flag.Args()
 	if len(programs) == 0 {
 		flag.Usage()
-		os.Exit(1)
+		os.Exit(errorExit)
 	}
 
 	if all {
 		found := which.All(programs...)
 
 		if len(found) == 0 {
-			os.Exit(1)
+			os.Exit(errorExit)
 		}
 
 		fmt.Println(strings.Join(found, "\n"))
@@ -54,13 +56,13 @@ func main() {
 			return
 		}
 
-		os.Exit(1)
+		os.Exit(errorExit)
 	}
 
 	found := which.Which(programs...)
 
 	if found == "" {
-		os.Exit(1)
+		os.Exit(errorExit)
 	}
 
 	fmt.Println(found)
