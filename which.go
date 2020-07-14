@@ -118,7 +118,7 @@ func isExec(fs afero.Fs, path string) bool {
 		return false
 	case fi.IsDir():
 		return false
-	case fi.Mode()&0111 != 0:
+	case fi.Mode()&0o111 != 0:
 		return true
 	}
 	// Windows filesystems have no execute bit...

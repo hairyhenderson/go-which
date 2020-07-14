@@ -15,22 +15,26 @@ func initFS(t *testing.T) afero.Fs {
 	fs := afero.NewMemMapFs()
 	contents := "#!/bin/sh\necho hello world"
 
-	dirs := []string{"/bin",
+	dirs := []string{
+		"/bin",
 		"/usr/bin",
 		"/usr/local/bin",
 		"/opt",
-		"/opt/bin"}
+		"/opt/bin",
+	}
 	for _, d := range dirs {
-		err := fs.MkdirAll(d, 0755)
+		err := fs.MkdirAll(d, 0o755)
 		assert.NilError(t, err)
 	}
 
 	// create some executables
-	files := []string{"/bin/foo", "/usr/bin/foo",
+	files := []string{
+		"/bin/foo", "/usr/bin/foo",
 		"/bin/bar", "/usr/local/bin/bar",
-		"/usr/local/bin/qux"}
+		"/usr/local/bin/qux",
+	}
 	for _, n := range files {
-		f, _ := fs.OpenFile(n, os.O_CREATE, 0755)
+		f, _ := fs.OpenFile(n, os.O_CREATE, 0o755)
 		_, err := f.WriteString(contents)
 		assert.NilError(t, err)
 	}
@@ -38,7 +42,7 @@ func initFS(t *testing.T) afero.Fs {
 	// create some non-executable files
 	files = []string{"/usr/local/bin/foo", "/opt/bar", "/opt/qux"}
 	for _, n := range files {
-		f, _ := fs.OpenFile(n, os.O_CREATE, 0644)
+		f, _ := fs.OpenFile(n, os.O_CREATE, 0o644)
 		_, err := f.WriteString(contents)
 		assert.NilError(t, err)
 	}
@@ -73,7 +77,8 @@ func TestAll(t *testing.T) {
 
 	assert.DeepEqual(t, []string{
 		"/usr/bin/foo", "/bin/foo",
-		"/usr/local/bin/bar", "/bin/bar"},
+		"/usr/local/bin/bar", "/bin/bar",
+	},
 		all(fs, "foo", "bar", "baz"))
 }
 
@@ -102,7 +107,7 @@ func init() {
 	for k, paths := range exampleBins {
 		if !Found(k) {
 			for _, p := range paths {
-				f, err := os.OpenFile(p, os.O_CREATE|os.O_RDWR, 0755)
+				f, err := os.OpenFile(p, os.O_CREATE|os.O_RDWR, 0o755)
 				if err != nil {
 					panic(err)
 				}
