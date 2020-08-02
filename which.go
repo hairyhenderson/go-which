@@ -114,7 +114,7 @@ func isExec(fs afero.Fs, path string) bool {
 	fi, err := fs.Stat(path)
 
 	switch {
-	case os.IsNotExist(err):
+	case err != nil:
 		return false
 	case fi.IsDir():
 		return false
