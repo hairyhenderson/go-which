@@ -12,27 +12,19 @@ linters-settings:
   goconst:
     min-len: 2
     min-occurrences: 4
-  depguard:
-    list-type: whitelist
-    include-go-root: false
-    packages:
-      - github.com/hairyhenderson/go-which
-      - github.com/hairyhenderson/go-which/internal/version
-      - github.com/spf13/afero
-    # inTests:
-      - github.com/stretchr/testify
-      - gotest.tools/
-      - gopkg.in/check.v1
   misspell:
     locale: en-CA
   lll:
     line-length: 140
+  nolintlint:
+    allow-leading-space: true # don't require machine-readable nolint directives (i.e. with no leading space)
+    allow-unused: false # report any unused nolint directives
+    require-explanation: false # don't require an explanation for nolint directives
+    require-specific: false # don't require nolint directives to be specific about which linter is being skipped
 
 linters:
   enable-all: true
   disable:
-    - interfacer
-
-run:
-  skip-dirs:
-    - vendor/
+    - testpackage
+    - godot
+    - goerr113

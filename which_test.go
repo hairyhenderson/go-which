@@ -3,6 +3,7 @@
 package which
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"testing"
@@ -63,7 +64,8 @@ func TestWhich(t *testing.T) {
 
 	assert.Equal(t, "/usr/bin/foo", which(fs, "foo", "bar", "baz"))
 
-	fs.statErr = &os.PathError{Err: fmt.Errorf("oh no")}
+	err := errors.New("oh no")
+	fs.statErr = &os.PathError{Err: err}
 	assert.Assert(t, !isExec(fs, "foo"))
 }
 
@@ -109,9 +111,11 @@ type fakeFS struct {
 
 func (f *fakeFS) Stat(path string) (os.FileInfo, error) {
 	fi, err := f.Fs.Stat(path)
+
 	if f.statErr == nil {
 		return fi, err
 	}
+
 	return nil, f.statErr
 }
 
