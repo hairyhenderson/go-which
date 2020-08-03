@@ -11,8 +11,8 @@ import (
 	"gotest.tools/v3/assert"
 )
 
-func initFS(t *testing.T) afero.Fs {
-	fs := afero.NewMemMapFs()
+func initFS(t *testing.T) *fakeFS {
+	fs := &fakeFS{Fs: afero.NewMemMapFs()}
 	contents := "#!/bin/sh\necho hello world"
 
 	dirs := []string{
@@ -62,6 +62,9 @@ func TestWhich(t *testing.T) {
 	assert.Equal(t, "", which(fs, "bin"))
 
 	assert.Equal(t, "/usr/bin/foo", which(fs, "foo", "bar", "baz"))
+
+	fs.statErr = &os.PathError{Err: fmt.Errorf("oh no")}
+	assert.Assert(t, !isExec(fs, "foo"))
 }
 
 func TestAll(t *testing.T) {
@@ -95,6 +98,21 @@ func TestFound(t *testing.T) {
 
 	assert.Assert(t, !found(fs, "foo", "bar", "baz"))
 	assert.Assert(t, found(fs, "foo", "bar", "qux"))
+}
+
+var _ afero.Fs = (*fakeFS)(nil)
+
+type fakeFS struct {
+	afero.Fs
+	statErr error
+}
+
+func (f *fakeFS) Stat(path string) (os.FileInfo, error) {
+	fi, err := f.Fs.Stat(path)
+	if f.statErr == nil {
+		return fi, err
+	}
+	return nil, f.statErr
 }
 
 // nolint: gochecknoinits

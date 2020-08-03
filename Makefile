@@ -121,7 +121,7 @@ gen-changelog:
 		github_changelog_generator --no-filter-by-milestone --exclude-labels duplicate,question,invalid,wontfix,admin
 
 lint:
-	golangci-lint run --disable wsl --disable godot --disable testpackage
+	golangci-lint run --disable wsl --disable godot --disable testpackage --disable goerr113
 
 .PHONY: gen-changelog clean test build-x compress-all build-release build test-integration-docker gen-docs lint clean-images clean-containers docker-images
 .DELETE_ON_ERROR:
