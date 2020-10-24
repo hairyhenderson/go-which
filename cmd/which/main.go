@@ -28,6 +28,7 @@ func main() {
 
 	if *ver {
 		fmt.Printf("%s (go-which) version %s (%s)\n", os.Args[0], version.Version, version.GitCommit)
+
 		return
 	}
 

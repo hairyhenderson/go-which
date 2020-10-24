@@ -89,6 +89,7 @@ func getPath() []string {
 		for i, k := range keys(os.Environ()) {
 			if strings.ToLower(k) == "path" {
 				pathVar = os.Environ()[i]
+
 				break
 			}
 		}
