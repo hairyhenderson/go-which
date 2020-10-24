@@ -1,6 +1,6 @@
 FROM hairyhenderson/upx:3.96 AS upx
 
-FROM golang:1.14.6-alpine AS build
+FROM golang:1.15.3-alpine AS build
 
 RUN apk add --no-cache \
     make \
@@ -27,6 +27,9 @@ FROM scratch AS artifacts
 
 COPY --from=compress /go/src/github.com/hairyhenderson/go-which/bin/* /bin/
 
+# gets around error 'Error response from daemon: No command specified'
+CMD [ "/bin/which" ]
+
 FROM scratch AS latest
 
 ARG OS=linux
@@ -46,7 +49,7 @@ LABEL org.opencontainers.image.revision=$VCS_REF \
 
 ENTRYPOINT [ "/which" ]
 
-FROM alpine:3.12.0 AS alpine
+FROM alpine:3.12.1 AS alpine
 
 ARG OS=linux
 ARG ARCH=amd64
