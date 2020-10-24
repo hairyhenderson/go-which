@@ -58,7 +58,7 @@ $(PREFIX)/%.signed: $(PREFIX)/%
 compress: $(PREFIX)/bin/$(PKG_NAME)_$(GOOS)-$(GOARCH)-slim$(call extension,$(GOOS))
 	cp $< $(PREFIX)/bin/$(PKG_NAME)-slim$(call extension,$(GOOS))
 
-%.iid: Dockerfile
+%.iid: $(shell find $(PREFIX) -type f -name '*.go') go.mod go.sum
 	@docker build \
 		--build-arg VCS_REF=$(COMMIT) \
 		--build-arg CODEOWNERS="$(shell grep `dirname $@` .github/CODEOWNERS | cut -f2)" \
@@ -87,7 +87,7 @@ v%.tag: latest.iid
 	@docker create --cidfile $@ $(shell cat $<)
 
 build-release: artifacts.cid
-	@docker cp $(shell cat $<):/bin/. bin/
+	@docker cp $(shell cat $^):/bin/. bin/
 
 docker-images: $(PKG_NAME).iid $(PKG_NAME)-slim.iid
 
