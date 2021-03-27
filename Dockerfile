@@ -1,6 +1,6 @@
 FROM hairyhenderson/upx:3.96 AS upx
 
-FROM golang:1.15.8-alpine AS build
+FROM golang:1.16.2-alpine AS build
 
 RUN apk add --no-cache \
     make \
@@ -49,7 +49,7 @@ LABEL org.opencontainers.image.revision=$VCS_REF \
 
 ENTRYPOINT [ "/which" ]
 
-FROM alpine:3.13.2 AS alpine
+FROM alpine:3.13.3 AS alpine
 
 ARG OS=linux
 ARG ARCH=amd64
