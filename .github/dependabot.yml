@@ -1,0 +1,29 @@
+version: 2
+updates:
+- package-ecosystem: gomod
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "02:00"
+    timezone: Canada/Eastern
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: github.com/spf13/afero
+    versions:
+    - 1.6.0
+- package-ecosystem: docker
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "02:00"
+    timezone: Canada/Eastern
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: alpine
+    versions:
+    - 3.13.3
+  - dependency-name: golang
+    versions:
+    - 1.16.0.pre.alpine
+    - 1.16.1.pre.alpine
+    - 1.16.2.pre.alpine
