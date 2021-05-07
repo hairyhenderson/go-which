@@ -3,144 +3,128 @@
 package which
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"testing"
+	"testing/fstest"
 
-	"github.com/spf13/afero"
-	"gotest.tools/v3/assert"
+	"github.com/stretchr/testify/assert"
 )
 
-func initFS(t *testing.T) *fakeFS {
-	fs := &fakeFS{Fs: afero.NewMemMapFs()}
-	contents := "#!/bin/sh\necho hello world"
+func initFS(_ *testing.T) fstest.MapFS {
+	fsys := fstest.MapFS{}
 
-	dirs := []string{
-		"/bin",
-		"/usr/bin",
-		"/usr/local/bin",
-		"/opt",
-		"/opt/bin",
-	}
-	for _, d := range dirs {
-		err := fs.MkdirAll(d, 0o755)
-		assert.NilError(t, err)
-	}
+	contents := []byte("#!/bin/sh\necho hello world")
 
-	// create some executables
-	files := []string{
-		"/bin/foo", "/usr/bin/foo",
-		"/bin/bar", "/usr/local/bin/bar",
-		"/usr/local/bin/qux",
-	}
-	for _, n := range files {
-		f, _ := fs.OpenFile(n, os.O_CREATE, 0o755)
-		_, err := f.WriteString(contents)
-		assert.NilError(t, err)
-	}
+	// some executables
+	fsys["bin/foo"] = &fstest.MapFile{Data: contents, Mode: 0o755}
+	fsys["usr/bin/foo"] = &fstest.MapFile{Data: contents, Mode: 0o755}
+	fsys["bin/bar"] = &fstest.MapFile{Data: contents, Mode: 0o755}
+	fsys["usr/local/bin/bar"] = &fstest.MapFile{Data: contents, Mode: 0o755}
+	fsys["usr/local/bin/qux"] = &fstest.MapFile{Data: contents, Mode: 0o755}
 
-	// create some non-executable files
-	files = []string{"/usr/local/bin/foo", "/opt/bar", "/opt/qux"}
-	for _, n := range files {
-		f, _ := fs.OpenFile(n, os.O_CREATE, 0o644)
-		_, err := f.WriteString(contents)
-		assert.NilError(t, err)
-	}
+	// some non-executable files
+	fsys["usr/local/bin/foo"] = &fstest.MapFile{Data: contents, Mode: 0o644}
+	fsys["opt/bar"] = &fstest.MapFile{Data: contents, Mode: 0o644}
+	fsys["opt/qux"] = &fstest.MapFile{Data: contents, Mode: 0o644}
 
-	return fs
+	return fsys
 }
 
 func TestWhich(t *testing.T) {
-	fs := initFS(t)
+	origFS := testFS
+	defer func() { testFS = origFS }()
+
+	testFS = initFS(t)
 
 	os.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin:/opt")
-	assert.Equal(t, "", which(fs))
-	assert.Equal(t, "", which(fs, ""))
-	assert.Equal(t, "", which(fs, "baz"))
-	assert.Equal(t, "/usr/bin/foo", which(fs, "foo"))
-	assert.Equal(t, "/usr/local/bin/bar", which(fs, "bar"))
-	assert.Equal(t, "", which(fs, "bin"))
+	assert.Equal(t, "", which())
+	assert.Equal(t, "", which(""))
+	assert.Equal(t, "", which("baz"))
+	assert.Equal(t, "/usr/bin/foo", which("foo"))
+	assert.Equal(t, "/usr/local/bin/bar", which("bar"))
+	assert.Equal(t, "", which("bin"))
 
-	assert.Equal(t, "/usr/bin/foo", which(fs, "foo", "bar", "baz"))
-
-	err := errors.New("oh no")
-	fs.statErr = &os.PathError{Err: err}
-	assert.Assert(t, !isExec(fs, "foo"))
+	assert.Equal(t, "/usr/bin/foo", which("foo", "bar", "baz"))
 }
 
 func TestAll(t *testing.T) {
-	fs := initFS(t)
+	origFS := testFS
+	defer func() { testFS = origFS }()
+
+	testFS = initFS(t)
 
 	os.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin:/opt")
-	assert.DeepEqual(t, []string{}, all(fs))
-	assert.DeepEqual(t, []string{}, all(fs, ""))
-	assert.DeepEqual(t, []string{}, all(fs, "baz"))
-	assert.DeepEqual(t, []string{"/usr/bin/foo", "/bin/foo"}, all(fs, "foo"))
-	assert.DeepEqual(t, []string{"/usr/local/bin/bar", "/bin/bar"}, all(fs, "bar"))
-	assert.DeepEqual(t, []string{}, all(fs, "bin"))
+	assert.EqualValues(t, []string{}, all())
+	assert.EqualValues(t, []string{}, all(""))
+	assert.EqualValues(t, []string{}, all("baz"))
+	assert.EqualValues(t, []string{"/usr/bin/foo", "/bin/foo"}, all("foo"))
+	assert.EqualValues(t, []string{"/usr/local/bin/bar", "/bin/bar"}, all("bar"))
+	assert.EqualValues(t, []string{}, all("bin"))
 
-	assert.DeepEqual(t, []string{
+	assert.EqualValues(t, []string{
 		"/usr/bin/foo", "/bin/foo",
 		"/usr/local/bin/bar", "/bin/bar",
 	},
-		all(fs, "foo", "bar", "baz"))
+		all("foo", "bar", "baz"))
 }
 
 func TestFound(t *testing.T) {
-	fs := initFS(t)
+	origFS := testFS
+	defer func() { testFS = origFS }()
+
+	testFS = initFS(t)
 
 	os.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin:/opt")
-	assert.Assert(t, !found(fs))
-	assert.Assert(t, !found(fs, ""))
-	assert.Assert(t, !found(fs, "baz"))
-	assert.Assert(t, found(fs, "foo"))
-	assert.Assert(t, found(fs, "bar"))
-	assert.Assert(t, !found(fs, "bin"))
+	assert.False(t, found())
+	assert.False(t, found(""))
+	assert.False(t, found("baz"))
+	assert.True(t, found("foo"))
+	assert.True(t, found("bar"))
+	assert.False(t, found("bin"))
 
-	assert.Assert(t, !found(fs, "foo", "bar", "baz"))
-	assert.Assert(t, found(fs, "foo", "bar", "qux"))
+	assert.False(t, found("foo", "bar", "baz"))
+	assert.True(t, found("foo", "bar", "qux"))
 }
 
-var _ afero.Fs = (*fakeFS)(nil)
+func TestFsysFor(t *testing.T) {
+	origFS := testFS
+	defer func() { testFS = origFS }()
 
-type fakeFS struct {
-	afero.Fs
-	statErr error
-}
+	testFS = nil
 
-func (f *fakeFS) Stat(path string) (os.FileInfo, error) {
-	fi, err := f.Fs.Stat(path)
+	fsys, p := fsysFor("")
+	assert.Equal(t, "/", fmt.Sprintf("%v", fsys))
+	assert.Equal(t, ".", p)
 
-	if f.statErr == nil {
-		return fi, err
-	}
+	fsys, p = fsysFor("/")
+	assert.Equal(t, "/", fmt.Sprintf("%v", fsys))
+	assert.Equal(t, ".", p)
 
-	return nil, f.statErr
+	fsys, p = fsysFor("/tmp/foo/bar")
+	assert.Equal(t, "/", fmt.Sprintf("%v", fsys))
+	assert.Equal(t, "tmp/foo/bar", p)
+
+	fsys, p = fsysFor("C:/Users/foo")
+	assert.Equal(t, "C:/", fmt.Sprintf("%v", fsys))
+	assert.Equal(t, "Users/foo", p)
+
+	fsys, p = fsysFor("d:/tmp/foo")
+	assert.Equal(t, "d:/", fmt.Sprintf("%v", fsys))
+	assert.Equal(t, "tmp/foo", p)
 }
 
 // nolint: gochecknoinits
 func init() {
-	exampleBins := map[string][]string{
-		"sh":   {"/bin/sh"},
-		"zsh":  {"/usr/local/bin/zsh", "/bin/zsh"},
-		"bash": {"/bin/bash"},
-	}
-	for k, paths := range exampleBins {
-		if !Found(k) {
-			for _, p := range paths {
-				f, err := os.OpenFile(p, os.O_CREATE|os.O_RDWR, 0o755)
-				if err != nil {
-					panic(err)
-				}
+	data := []byte("#!/bin/sh\necho hello world\n")
 
-				_, err = f.WriteString("#!/bin/sh\necho hello world\n")
-				if err != nil {
-					panic(err)
-				}
-			}
-		}
-	}
+	memfs := fstest.MapFS{}
+	memfs["bin/sh"] = &fstest.MapFile{Data: data, Mode: 0o755}
+	memfs["usr/local/bin/zsh"] = &fstest.MapFile{Data: data, Mode: 0o755}
+	memfs["bin/zsh"] = &fstest.MapFile{Data: data, Mode: 0o755}
+	memfs["bin/bash"] = &fstest.MapFile{Data: data, Mode: 0o755}
+
+	testFS = memfs
 }
 
 func ExampleWhich() {
