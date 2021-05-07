@@ -24,13 +24,11 @@ jobs:
       - run: make integration
   windows-test:
     runs-on: windows-latest
-    env:
-      TMP: D:\tmp
     steps:
-      - uses: actions/setup-go@v1
+      - uses: actions/setup-go@v2.1.3
         with:
-          go-version: 1.16.x
-      - uses: actions/checkout@v1
+          go-version: '^1.16.3'
+      - uses: actions/checkout@v2.3.4
       - run: make test
       - run: make integration
   lint:
