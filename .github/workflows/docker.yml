@@ -1,0 +1,14 @@
+name: Docker Build
+on: [push]
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-20.04
+    env:
+      DOCKER_BUILDKIT: 1
+      DOCKER_CLI_EXPERIMENTAL: enabled
+    steps:
+    - uses: actions/checkout@v2
+    - name: Docker images
+      run: |
+        make artifacts.tag latest.tag alpine.tag

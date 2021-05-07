@@ -1,0 +1,42 @@
+name: Build
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    container:
+      image: ghcr.io/hairyhenderson/gomplate-ci-build:latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - run: make test
+      - name: make test
+        run: |
+          [ -n "$CC_TEST_REPORTER_ID" ] && cc-test-reporter before-build
+          make test
+          EXIT_CODE=$?
+
+          if [ -n "$CC_TEST_REPORTER_ID" ]; then
+            # workaround from https://github.com/codeclimate/test-reporter/issues/378
+            cc-test-reporter after-build -t gocov -p $(go list -m) --exit-code $EXIT_CODE
+          fi
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      - run: make integration
+  windows-test:
+    runs-on: windows-latest
+    env:
+      TMP: D:\tmp
+    steps:
+      - uses: actions/setup-go@v1
+        with:
+          go-version: 1.16.x
+      - uses: actions/checkout@v1
+      - run: make test
+      - run: make integration
+  lint:
+    runs-on: ubuntu-20.04
+    container:
+      image: ghcr.io/hairyhenderson/gomplate-ci-build:latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - run: make ci-lint

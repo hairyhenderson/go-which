@@ -54,7 +54,7 @@ FROM alpine:3.13.5 AS alpine
 ARG OS=linux
 ARG ARCH=amd64
 
-COPY --from=compress /go/src/github.com/hairyhenderson/go-which/bin/which_${OS}-${ARCH}-slim /bin/which
+COPY --from=build /go/src/github.com/hairyhenderson/go-which/bin/which_${OS}-${ARCH} /bin/which
 
 ARG VCS_REF
 ARG VERSION

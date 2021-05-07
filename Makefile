@@ -1,10 +1,8 @@
 .DEFAULT_GOAL = build
 extension = $(patsubst windows,.exe,$(filter windows,$(1)))
-GO := go
 PKG_NAME ?= $(subst go-,,$(shell basename `pwd`))
 PREFIX := .
 GO111MODULE := on
-GOFLAGS := -mod=vendor
 DOCKER_BUILDKIT ?= 1
 
 DOCKER_REPO ?= hairyhenderson/$(PKG_NAME)
@@ -91,9 +89,9 @@ build-release: artifacts.cid
 
 docker-images: $(PKG_NAME).iid $(PKG_NAME)-slim.iid
 
-$(PREFIX)/bin/$(PKG_NAME)_%: $(shell find $(PREFIX) -type f -name '*.go')
+$(PREFIX)/bin/$(PKG_NAME)_%: $(shell find $(PREFIX) -type f -name "*.go")
 	GOOS=$(shell echo $* | cut -f1 -d-) GOARCH=$(shell echo $* | cut -f2 -d- | cut -f1 -d.) CGO_ENABLED=0 \
-		$(GO) build \
+		go build \
 			-ldflags "-w -s $(COMMIT_FLAG) $(VERSION_FLAG)" \
 			-o $@ \
 			./cmd/$(PKG_NAME)
@@ -103,12 +101,27 @@ $(PREFIX)/bin/$(PKG_NAME)$(call extension,$(GOOS)): $(PREFIX)/bin/$(PKG_NAME)_$(
 
 build: $(PREFIX)/bin/$(PKG_NAME)$(call extension,$(GOOS))
 
+ifeq ($(OS),Windows_NT)
 test:
-	$(GO) test -v -race -coverprofile=c.out ./...
+	go test -coverprofile=c.out ./...
+else
+test:
+	go test -race -coverprofile=c.out ./...
+endif
 
-integration: $(PREFIX)/bin/$(PKG_NAME)
-	$(GO) test -v -tags=integration \
+ifeq ($(OS),Windows_NT)
+integration: $(PREFIX)/bin/$(PKG_NAME)$(call extension,$(GOOS))
+	go test -v \
+		-ldflags "-X `go list ./internal/tests/integration`.WhichBin=$(shell cygpath -ma .)/$<" \
+		-tags=integration \
 		./internal/tests/integration -check.v
+else
+integration: $(PREFIX)/bin/$(PKG_NAME)
+	go test -v \
+		-ldflags "-X `go list ./internal/tests/integration`.WhichBin=$(shell pwd)/$<" \
+		-tags=integration \
+		./internal/tests/integration -check.v
+endif
 
 integration.iid: Dockerfile.integration $(PREFIX)/bin/$(PKG_NAME)_linux-amd64$(call extension,$(GOOS))
 	docker build -f $< --iidfile $@ .
@@ -121,7 +134,10 @@ gen-changelog:
 		github_changelog_generator --no-filter-by-milestone --exclude-labels duplicate,question,invalid,wontfix,admin
 
 lint:
-	golangci-lint run .
+	@golangci-lint run --verbose --max-same-issues=0 --max-issues-per-linter=0 --sort-results
+
+ci-lint:
+	@golangci-lint run --verbose --max-same-issues=0 --max-issues-per-linter=0 --sort-results --out-format=github-actions
 
 .PHONY: gen-changelog clean test build-x compress-all build-release build test-integration-docker gen-docs lint clean-images clean-containers docker-images
 .DELETE_ON_ERROR:
