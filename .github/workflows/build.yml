@@ -21,7 +21,6 @@ jobs:
           fi
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-      - run: make integration
   windows-test:
     runs-on: windows-latest
     steps:
@@ -30,7 +29,6 @@ jobs:
           go-version: '^1.16.3'
       - uses: actions/checkout@v2.3.4
       - run: make test
-      - run: make integration
   lint:
     runs-on: ubuntu-20.04
     container:

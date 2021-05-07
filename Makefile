@@ -56,7 +56,7 @@ $(PREFIX)/%.signed: $(PREFIX)/%
 compress: $(PREFIX)/bin/$(PKG_NAME)_$(GOOS)-$(GOARCH)-slim$(call extension,$(GOOS))
 	cp $< $(PREFIX)/bin/$(PKG_NAME)-slim$(call extension,$(GOOS))
 
-%.iid: $(shell find $(PREFIX) -type f -name '*.go') go.mod go.sum
+%.iid: Dockerfile $(shell find $(PREFIX) -type f -name '*.go') go.mod go.sum
 	@docker build \
 		--build-arg VCS_REF=$(COMMIT) \
 		--build-arg CODEOWNERS="$(shell grep `dirname $@` .github/CODEOWNERS | cut -f2)" \
@@ -108,26 +108,6 @@ else
 test:
 	go test -race -coverprofile=c.out ./...
 endif
-
-ifeq ($(OS),Windows_NT)
-integration: $(PREFIX)/bin/$(PKG_NAME)$(call extension,$(GOOS))
-	go test -v \
-		-ldflags "-X `go list ./internal/tests/integration`.WhichBin=$(shell cygpath -ma .)/$<" \
-		-tags=integration \
-		./internal/tests/integration -check.v
-else
-integration: $(PREFIX)/bin/$(PKG_NAME)
-	go test -v \
-		-ldflags "-X `go list ./internal/tests/integration`.WhichBin=$(shell pwd)/$<" \
-		-tags=integration \
-		./internal/tests/integration -check.v
-endif
-
-integration.iid: Dockerfile.integration $(PREFIX)/bin/$(PKG_NAME)_linux-amd64$(call extension,$(GOOS))
-	docker build -f $< --iidfile $@ .
-
-test-integration-docker: integration.iid
-	docker run -it --rm $(shell cat $<)
 
 gen-changelog:
 	docker run -it -v $(shell pwd):/app --workdir /app -e CHANGELOG_GITHUB_TOKEN hairyhenderson/github_changelog_generator \
