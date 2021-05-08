@@ -19,10 +19,6 @@ import (
 // will be returned. If none of the programs are found, the empty string is
 // returned.
 func Which(program ...string) string {
-	return which(program...)
-}
-
-func which(program ...string) string {
 	for _, prog := range program {
 		for _, p := range getPath() {
 			candidate := filepath.Join(p, prog)
@@ -38,10 +34,6 @@ func which(program ...string) string {
 // All returns all instances of the executable program(s), instead of just the
 // first one.
 func All(program ...string) []string {
-	return all(program...)
-}
-
-func all(program ...string) []string {
 	out := []string{}
 
 	for _, prog := range program {
@@ -59,10 +51,6 @@ func all(program ...string) []string {
 // Found returns true if all of the given executable program(s) are found, false
 // if one or more are not found.
 func Found(program ...string) bool {
-	return found(program...)
-}
-
-func found(program ...string) bool {
 	count := 0
 	for _, prog := range program {
 		count = 0
@@ -83,29 +71,7 @@ func found(program ...string) bool {
 }
 
 func getPath() []string {
-	pathVar := os.Getenv("PATH")
-	if pathVar == "" && runtime.GOOS == "windows" {
-		for i, k := range keys(os.Environ()) {
-			if strings.ToLower(k) == "path" {
-				pathVar = os.Environ()[i]
-
-				break
-			}
-		}
-	}
-
-	return strings.Split(pathVar, string(os.PathListSeparator))
-}
-
-func keys(env []string) []string {
-	out := make([]string, len(env))
-
-	for i, v := range env {
-		parts := strings.SplitN(v, "=", 2)
-		out[i] = parts[0]
-	}
-
-	return out
+	return strings.Split(os.Getenv("PATH"), string(os.PathListSeparator))
 }
 
 //nolint:gochecknoglobals
@@ -139,8 +105,7 @@ func fsysFor(path string) (fs.FS, string) {
 // isExec returns true when the file at an absolute path is a regular file with
 // the execute bit set (if on UNIX)
 func isExec(p string) bool {
-	p = filepath.ToSlash(p)
-	fsys, path := fsysFor(p)
+	fsys, path := fsysFor(filepath.ToSlash(p))
 
 	fi, err := fs.Stat(fsys, path)
 
