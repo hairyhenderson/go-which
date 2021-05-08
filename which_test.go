@@ -38,14 +38,14 @@ func TestWhich(t *testing.T) {
 	testFS = initFS(t)
 
 	os.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin:/opt")
-	assert.Equal(t, "", which())
-	assert.Equal(t, "", which(""))
-	assert.Equal(t, "", which("baz"))
-	assert.Equal(t, "/usr/bin/foo", which("foo"))
-	assert.Equal(t, "/usr/local/bin/bar", which("bar"))
-	assert.Equal(t, "", which("bin"))
+	assert.Equal(t, "", Which())
+	assert.Equal(t, "", Which(""))
+	assert.Equal(t, "", Which("baz"))
+	assert.Equal(t, "/usr/bin/foo", Which("foo"))
+	assert.Equal(t, "/usr/local/bin/bar", Which("bar"))
+	assert.Equal(t, "", Which("bin"))
 
-	assert.Equal(t, "/usr/bin/foo", which("foo", "bar", "baz"))
+	assert.Equal(t, "/usr/bin/foo", Which("foo", "bar", "baz"))
 }
 
 func TestAll(t *testing.T) {
@@ -55,18 +55,18 @@ func TestAll(t *testing.T) {
 	testFS = initFS(t)
 
 	os.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin:/opt")
-	assert.EqualValues(t, []string{}, all())
-	assert.EqualValues(t, []string{}, all(""))
-	assert.EqualValues(t, []string{}, all("baz"))
-	assert.EqualValues(t, []string{"/usr/bin/foo", "/bin/foo"}, all("foo"))
-	assert.EqualValues(t, []string{"/usr/local/bin/bar", "/bin/bar"}, all("bar"))
-	assert.EqualValues(t, []string{}, all("bin"))
+	assert.EqualValues(t, []string{}, All())
+	assert.EqualValues(t, []string{}, All(""))
+	assert.EqualValues(t, []string{}, All("baz"))
+	assert.EqualValues(t, []string{"/usr/bin/foo", "/bin/foo"}, All("foo"))
+	assert.EqualValues(t, []string{"/usr/local/bin/bar", "/bin/bar"}, All("bar"))
+	assert.EqualValues(t, []string{}, All("bin"))
 
 	assert.EqualValues(t, []string{
 		"/usr/bin/foo", "/bin/foo",
 		"/usr/local/bin/bar", "/bin/bar",
 	},
-		all("foo", "bar", "baz"))
+		All("foo", "bar", "baz"))
 }
 
 func TestFound(t *testing.T) {
@@ -76,15 +76,15 @@ func TestFound(t *testing.T) {
 	testFS = initFS(t)
 
 	os.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin:/opt")
-	assert.False(t, found())
-	assert.False(t, found(""))
-	assert.False(t, found("baz"))
-	assert.True(t, found("foo"))
-	assert.True(t, found("bar"))
-	assert.False(t, found("bin"))
+	assert.False(t, Found())
+	assert.False(t, Found(""))
+	assert.False(t, Found("baz"))
+	assert.True(t, Found("foo"))
+	assert.True(t, Found("bar"))
+	assert.False(t, Found("bin"))
 
-	assert.False(t, found("foo", "bar", "baz"))
-	assert.True(t, found("foo", "bar", "qux"))
+	assert.False(t, Found("foo", "bar", "baz"))
+	assert.True(t, Found("foo", "bar", "qux"))
 }
 
 func TestFsysFor(t *testing.T) {
