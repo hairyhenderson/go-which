@@ -80,6 +80,7 @@ var testFS fs.FS
 // fsysFor returns the filesystem and the relative path for an absolute path.
 // Handles Windows by not assuming all paths are rooted at /
 func fsysFor(path string) (fs.FS, string) {
+	//nolint:gomnd
 	parts := strings.SplitAfterN(path, "/", 2)
 
 	root := parts[0]
