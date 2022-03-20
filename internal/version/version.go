@@ -1,6 +1,6 @@
 package version
 
-// nolint: gochecknoglobals
+//nolint:gochecknoglobals
 var (
 	// Version will be overwritten automatically by the build
 	Version = "0.0.0"

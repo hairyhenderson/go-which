@@ -115,7 +115,7 @@ func TestFsysFor(t *testing.T) {
 	assert.Equal(t, "tmp/foo", p)
 }
 
-// nolint: gochecknoinits
+//nolint:gochecknoinits
 func init() {
 	data := []byte("#!/bin/sh\necho hello world\n")
 
