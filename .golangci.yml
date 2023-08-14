@@ -1,5 +1,5 @@
 run:
-  go: '1.18'
+  go: '1.21'
 
 linters-settings:
   govet:
@@ -28,7 +28,6 @@ linters:
   enable:
     - asciicheck
     - bodyclose
-    - depguard
     - dogsled
     - dupl
     - errcheck
