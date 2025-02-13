@@ -1,11 +1,11 @@
 FROM hairyhenderson/upx:3.96 AS upx
 
-FROM golang:1.23-alpine AS build
+FROM golang:1.24-alpine AS build
 
 RUN apk add --no-cache \
-    make \
-    libgcc libstdc++ ucl \
-    git
+      make \
+      libgcc libstdc++ ucl \
+      git
 
 COPY --from=upx /usr/bin/upx /usr/bin/upx
 
