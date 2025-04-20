@@ -2,6 +2,15 @@ name: Labeler
 on:
   pull_request_target:
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   label:
     runs-on: ubuntu-latest
