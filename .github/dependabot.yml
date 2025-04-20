@@ -4,20 +4,21 @@ updates:
   directory: "/"
   schedule:
     interval: daily
-    time: "02:00"
-    timezone: Canada/Eastern
-  open-pull-requests-limit: 10
+  commit-message:
+    prefix: deps(go)
 - package-ecosystem: docker
   directory: "/"
   schedule:
     interval: daily
-    time: "02:00"
-    timezone: Canada/Eastern
-  open-pull-requests-limit: 10
+  commit-message:
+    prefix: deps(docker)
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
     interval: daily
-    time: "02:00"
-    timezone: Canada/Eastern
-  open-pull-requests-limit: 10
+  commit-message:
+    prefix: deps(actions)
+  groups:
+    actions:
+      patterns:
+        - "actions/*"
