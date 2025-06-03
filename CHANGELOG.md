@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/hairyhenderson/go-which/compare/v0.2.2...v0.2.3) (2025-06-03)
+
+
+### Dependencies
+
+* **docker:** Bump alpine from 3.21 to 3.22 ([#157](https://github.com/hairyhenderson/go-which/issues/157)) ([3b6a4cc](https://github.com/hairyhenderson/go-which/commit/3b6a4cc403fe8ac34be4e408dee955fcd55050ce))
+
 ## [0.2.2](https://github.com/hairyhenderson/go-which/compare/v0.2.1...v0.2.2) (2025-04-20)
 
 
