@@ -49,7 +49,7 @@ LABEL org.opencontainers.image.revision=$VCS_REF \
 
 ENTRYPOINT [ "/which" ]
 
-FROM alpine:3.22 AS alpine
+FROM alpine:3.23 AS alpine
 
 ARG OS=linux
 ARG ARCH=amd64
