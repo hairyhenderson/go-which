@@ -16,7 +16,7 @@ jobs:
       DOCKER_BUILDKIT: 1
       DOCKER_CLI_EXPERIMENTAL: enabled
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Docker images
       run: |
         make artifacts.tag latest.tag alpine.tag
