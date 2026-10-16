@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.4](https://github.com/hairyhenderson/go-which/compare/v0.2.3...v0.2.4) (2026-10-16)
+
+
+### Dependencies
+
+* **actions:** bump the actions group across 1 directory with 3 updates ([#176](https://github.com/hairyhenderson/go-which/issues/176)) ([1709c9a](https://github.com/hairyhenderson/go-which/commit/1709c9a37abaa192c856c3477082ea1d244ed912))
+* **docker:** bump alpine from 3.23 to 3.24 ([#173](https://github.com/hairyhenderson/go-which/issues/173)) ([d23d045](https://github.com/hairyhenderson/go-which/commit/d23d0450e000c7aba83fc6ff849fe42682719fd8))
+* **docker:** bump golang from 1.26-alpine to 1.27-alpine ([#180](https://github.com/hairyhenderson/go-which/issues/180)) ([2b1222c](https://github.com/hairyhenderson/go-which/commit/2b1222ca105da579b7b4aa792f60ea63fbc3fc6e))
+* **go:** bump github.com/stretchr/testify from 1.11.1 to 1.12.1 ([#179](https://github.com/hairyhenderson/go-which/issues/179)) ([16274c9](https://github.com/hairyhenderson/go-which/commit/16274c91f4b6f0f8cc981e63ad72bfd1e4ccbfc8))
+
 ## [0.2.3](https://github.com/hairyhenderson/go-which/compare/v0.2.2...v0.2.3) (2026-05-11)
 
 
