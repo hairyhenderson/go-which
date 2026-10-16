@@ -2,7 +2,7 @@ module github.com/hairyhenderson/go-which
 
 go 1.25.0
 
-toolchain go1.26.3
+toolchain go1.27.2
 
 require github.com/stretchr/testify v1.12.1
 
