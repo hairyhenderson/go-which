@@ -17,16 +17,16 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/hairyhenderson/gomplate-ci-build:latest
     steps:
-      - run: |
-          git config --global user.email "bogus@example.com"
-          git config --global user.name "Someone"
-          git config --global --add safe.directory /__w/go-which/go-which
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - run: |
+          git config --global user.email "bogus@example.com"
+          git config --global user.name "Someone"
       - run: make test
   windows-test:
     runs-on: windows-latest
@@ -44,8 +44,12 @@ jobs:
       - run: make test
   lint:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/hairyhenderson/gomplate-ci-build:latest
     steps:
       - uses: actions/checkout@v7
-      - run: make ci-lint
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - uses: golangci/golangci-lint-action@v9
+        with:
+          version: latest
+          args: --verbose --max-same-issues=0 --max-issues-per-linter=0
