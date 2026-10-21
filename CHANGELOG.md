@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.5](https://github.com/hairyhenderson/go-which/compare/v0.2.4...v0.2.5) (2026-10-20)
+
+
+### Dependencies
+
+* update Go to 1.27.3 ([#184](https://github.com/hairyhenderson/go-which/issues/184)) ([6241a62](https://github.com/hairyhenderson/go-which/commit/6241a629f95dfc24c76dbe1fb621f24c549cc62c))
+
 ## [0.2.4](https://github.com/hairyhenderson/go-which/compare/v0.2.3...v0.2.4) (2026-10-16)
 
 
