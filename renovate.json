@@ -1,0 +1,43 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices"
+  ],
+  "osvVulnerabilityAlerts": true,
+  "semanticCommits": "enabled",
+  "semanticCommitType": "deps",
+  "semanticCommitScope": "{{manager}}",
+  "platformAutomerge": true,
+  "packageRules": [
+    {
+      "description": "Use deps for every update. config:best-practices sets chore in its own packageRules, which override semanticCommitType above.",
+      "matchPackageNames": ["*"],
+      "semanticCommitType": "deps"
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "minimumReleaseAge": "7 days",
+      "automerge": true
+    },
+    {
+      "matchUpdateTypes": ["digest"],
+      "automerge": true
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Indirect Go deps take their major version from the module that imports them, so a major bump in our go.mod can't work",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["indirect"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "description": "Own modules: no release-age wait, we publish these ourselves",
+      "matchPackageNames": ["github.com/hairyhenderson/**"],
+      "minimumReleaseAge": "0 days"
+    }
+  ]
+}
