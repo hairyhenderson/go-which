@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.6](https://github.com/hairyhenderson/go-which/compare/v0.2.5...v0.2.6) (2026-11-26)
+
+
+### Dependencies
+
+* **dockerfile:** update golang docker tag to v1.27.4 ([#196](https://github.com/hairyhenderson/go-which/issues/196)) ([0bf9cb3](https://github.com/hairyhenderson/go-which/commit/0bf9cb37001fef6c461d0b7c30d1d70e547e1e95))
+* **github-actions:** pin dependencies ([#191](https://github.com/hairyhenderson/go-which/issues/191)) ([617f653](https://github.com/hairyhenderson/go-which/commit/617f653ba685b317109c6ac68c1bd8a1a88fac64))
+* **github-actions:** update actions/checkout action to v7 ([#197](https://github.com/hairyhenderson/go-which/issues/197)) ([5c4e100](https://github.com/hairyhenderson/go-which/commit/5c4e1008389e17a3a836df4a8d8a377989414fd2))
+* **github-actions:** update actions/checkout digest to d23441a ([#194](https://github.com/hairyhenderson/go-which/issues/194)) ([4670fe1](https://github.com/hairyhenderson/go-which/commit/4670fe1d90ae4e2294e614172b9d27ceee9ac78d))
+* **github-actions:** update actions/setup-go action to v7 ([#198](https://github.com/hairyhenderson/go-which/issues/198)) ([20f3891](https://github.com/hairyhenderson/go-which/commit/20f3891fe75d2e792b134f007b1e3c5a9e3a10a7))
+* **github-actions:** update actions/setup-go digest to 924ae3a ([#195](https://github.com/hairyhenderson/go-which/issues/195)) ([20defb5](https://github.com/hairyhenderson/go-which/commit/20defb59596b8a6ef8965c4b0af9f743af254223))
+* **gomod:** update go toolchain directive to v1.27.4 [security] ([#190](https://github.com/hairyhenderson/go-which/issues/190)) ([373d7a8](https://github.com/hairyhenderson/go-which/commit/373d7a8ab7e9829fc43cbd2a389114540361fda7))
+
 ## [0.2.5](https://github.com/hairyhenderson/go-which/compare/v0.2.4...v0.2.5) (2026-10-20)
 
 
